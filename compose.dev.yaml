@@ -1,0 +1,8 @@
+services:
+  api:
+    build:
+      target: dev # Uses the 'dev' stage from Dockerfile
+    volumes:
+      - .:/app # Live reload
+      - /app/node_modules # Prevents overwriting node_modules
+    command: ["pnpm", "start:dev"] # Run Nest.js in dev mode

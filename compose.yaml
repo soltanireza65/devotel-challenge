@@ -1,0 +1,39 @@
+services:
+  api:
+    container_name: devotel-api
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    container_name: devotel-postgres
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  redis:
+    container_name: devotel-redis
+    image: redis:latest
+    restart: always
+    command: ["redis-server", "--requirepass", "redis"]
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=redis
+    volumes:
+      - redis_data:/data
+volumes:
+  pgdata:
+  redis_data:

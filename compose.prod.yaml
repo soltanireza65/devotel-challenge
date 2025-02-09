@@ -1,0 +1,6 @@
+services:
+  api:
+    build:
+      target: prod # Uses the 'prod' stage from Dockerfile
+    restart: always
+    command: ["node", "dist/main.js"] # Runs built app
