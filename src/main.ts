@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from '@/app.module';
+import { EnvService } from './shared/env/env.service';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './shared/filters/Http-error.filter';
+import { setupSwagger } from './shared/utils/swagger.utils';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule.register({ driver: 'prisma' }));
 
   app.setGlobalPrefix('api');
 
@@ -18,7 +20,12 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(process.env.PORT ?? 8000, () => {
+  setupSwagger(app);
+
+  const configService = app.get<EnvService>(EnvService);
+  const httpPort = configService.get('HTTP_PORT');
+
+  await app.listen(httpPort, () => {
     console.log(`Server is running on http://localhost:${process.env.PORT ?? 8000}`);
   });
 }

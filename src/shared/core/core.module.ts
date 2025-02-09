@@ -1,7 +1,7 @@
 import { EnvService } from '@/shared/env/env.service';
 import { DynamicModule, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { IApplicationBootstrapOptions } from '../utils/utility.types';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({})
 export class CoreModule {
@@ -15,10 +15,10 @@ export class CoreModule {
   }
 
   private static resolveImports(options: IApplicationBootstrapOptions): DynamicModule[] {
-    const imports: DynamicModule[] = [];
+    const imports: any[] = [];
 
     if (options.driver === 'prisma') {
-      throw new Error('Prisma driver is not supported yet');
+      PrismaModule.register();
     }
 
     if (options.driver === 'typeorm') {
