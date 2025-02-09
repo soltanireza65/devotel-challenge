@@ -18,7 +18,7 @@ export class CoreModule {
     const imports: any[] = [];
 
     if (options.driver === 'prisma') {
-      PrismaModule.register();
+      imports.push(PrismaModule.register());
     }
 
     if (options.driver === 'typeorm') {

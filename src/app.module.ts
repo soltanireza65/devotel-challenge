@@ -7,16 +7,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { QueueOptions } from 'bullmq';
 import { WinstonModule } from 'nest-winston';
-import { EnvService } from './shared/env/env.service';
 import { winstonLoggerConfig } from './shared/config/logger.config';
+import { CoreModule } from './shared/core/core.module';
+import { EnvService } from './shared/env/env.service';
 import { LoggingMiddleware } from './shared/middlewares/logging.middleware';
 import { IApplicationBootstrapOptions } from './shared/utils/utility.types';
-import { PrismaModule } from './shared/prisma/prisma.module';
-import { CoreModule } from './shared/core/core.module';
 
 @Module({
   imports: [
-    PrismaModule,
     CqrsModule.forRoot(),
     ConfigModule.forRoot({
       validate: (env) => envSchema.parse(env),
@@ -40,7 +38,6 @@ import { CoreModule } from './shared/core/core.module';
       transports: winstonLoggerConfig,
     }),
     EnvModule,
-    JobOffersModule,
   ],
 })
 export class AppModule implements NestModule {
@@ -51,11 +48,7 @@ export class AppModule implements NestModule {
   static register(options: IApplicationBootstrapOptions) {
     return {
       module: AppModule,
-      imports: [
-        //
-        CoreModule.forRoot(options),
-        JobOffersModule.register(options),
-      ],
+      imports: [CoreModule.forRoot(options), JobOffersModule.register(options)],
     };
   }
 }
